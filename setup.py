@@ -16,7 +16,11 @@ setuptools.setup(
     install_requires=["pyqt5"],
     packages=setuptools.find_packages(),
     package_data={},
-    entry_points={},
+    entry_points={
+        'gui_scripts': [
+            'LoRaSim=LoRaSim:launch_gui',
+        ]
+    },
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
