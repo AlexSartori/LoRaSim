@@ -1,5 +1,5 @@
 import os
-from MarkovChain import MarkovChain
+from LoRaSim.MarkovChain import MarkovChain
 
 
 def testInit():

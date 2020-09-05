@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
+from LoRaSim.gui.SimIntervalsView import SimIntervalsView
 
 
 class HomeWindow(QtWidgets.QMainWindow):
@@ -10,6 +11,7 @@ class HomeWindow(QtWidgets.QMainWindow):
 
     def initUI(self):
         self.toolbar = self.createToolbar()
+        self.simIntView = self.createSimIntView()
 
     def createToolbar(self):
         startAction = QtWidgets.QAction(
@@ -22,3 +24,8 @@ class HomeWindow(QtWidgets.QMainWindow):
         toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         toolbar.addAction(startAction)
         return toolbar
+
+    def createSimIntView(self):
+        s = SimIntervalsView()
+        self.setCentralWidget(s)
+        return s
