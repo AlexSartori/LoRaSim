@@ -4,7 +4,8 @@
     Created by Alessandro Sartori, September 2020.
 '''
 
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtWidgets
+from LoRaSim.gui.AddSimIntWindow import AddSimIntWindow
 
 
 class SimIntervalsView(QtWidgets.QFrame):
@@ -32,6 +33,9 @@ class SimIntervalsView(QtWidgets.QFrame):
     def createAddBtn(self):
         add_btn = QtWidgets.QPushButton()
         add_btn.setText("+ Add interval")
-        # add_btn.clicked.connect(...)
+        add_btn.clicked.connect(self.openAddSimIntWindow)
         self.layout().addWidget(add_btn)
         return add_btn
+
+    def openAddSimIntWindow(self):
+        AddSimIntWindow(self).show()

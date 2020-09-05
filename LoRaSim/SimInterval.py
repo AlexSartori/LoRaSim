@@ -7,4 +7,5 @@
 
 class SimInterval:
     def __init__(self):
-        pass
+        self.model = None
+        self.time_length = 0
