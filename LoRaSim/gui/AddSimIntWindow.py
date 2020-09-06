@@ -1,5 +1,5 @@
 import os
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 from LoRaSim.MarkovChain import MarkovChain
 from LoRaSim.gui.MarkovListItem import MarkovListItem
 
@@ -15,7 +15,7 @@ class AddSimIntWindow(QtWidgets.QDialog):
         self.setLayout(QtWidgets.QVBoxLayout())
         self.title = self.createTitle()
         self.intView = self.createIntView()
-        self.durationDial = self.createDurationSpinner()
+        self.durationSpinner = self.createDurationSpinner()
         self.addBtn = self.createAddBtn()
 
         self.loadMarkovModels()
@@ -52,11 +52,15 @@ class AddSimIntWindow(QtWidgets.QDialog):
 
     def createDurationSpinner(self):
         label = QtWidgets.QLabel()
-        label.setText("Duration:")
+        label.setText("Duration (hh:mm:ss:ms):")
         self.layout().addWidget(label)
 
-        spinner = QtWidgets.QSpinBox()
-        spinner.setRange(0, 10)
+        spinner = QtWidgets.QTimeEdit()
+        spinner.setTimeRange(
+            QtCore.QTime(0, 0, 0, 0),
+            QtCore.QTime(9, 0, 0, 0)
+        )
+        spinner.setDisplayFormat("hh:mm:ss:zzz")
         self.layout().addWidget(spinner)
         return spinner
 
