@@ -4,7 +4,7 @@
     Created by Alessandro Sartori, September 2020.
 '''
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from LoRaSim.gui.AddSimIntWindow import AddSimIntWindow
 
 
@@ -28,9 +28,9 @@ class SimIntervalsView(QtWidgets.QFrame):
     def createIntTable(self):
         tab = QtWidgets.QTableWidget()
         tab.setColumnCount(3)
-        tab.setHorizontalHeaderLabels(['Start time', 'Duration', 'Model'])
+        tab.setHorizontalHeaderLabels(['Start time (ms)', 'Duration (ms)', 'Model'])
         tab.horizontalHeader().setStretchLastSection(True)
-
+        tab.resizeColumnsToContents()
         # tab.setRowCount(1)
         # tab.setItem(0, 0, QtWidgets.QTableWidgetItem('a'))
 
@@ -45,4 +45,25 @@ class SimIntervalsView(QtWidgets.QFrame):
         return add_btn
 
     def openAddSimIntWindow(self):
-        AddSimIntWindow(self).show()
+        dialog = AddSimIntWindow(self)
+
+        if dialog.exec_() == QtWidgets.QDialog.Accepted:
+            selected = dialog.intView.selectedItems()
+            if len(selected) < 1: return
+            modelItem = dialog.intView.itemWidget(selected[0])
+            model = modelItem.model
+
+            self.addIntervalToSim(
+                model,
+                dialog.durationSpinner.time().msecsSinceStartOfDay()
+            )
+        else:
+            print('Cancelled')
+        dialog.deleteLater()
+
+    def addIntervalToSim(self, model, duration_ms):
+        row = self.table.rowCount()
+        self.table.insertRow(row)
+        self.table.setItem(row, 0, QtWidgets.QTableWidgetItem('-'))
+        self.table.setItem(row, 1, QtWidgets.QTableWidgetItem(str(duration_ms)))
+        self.table.setItem(row, 2, QtWidgets.QTableWidgetItem(model.title))

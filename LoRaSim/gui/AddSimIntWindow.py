@@ -10,6 +10,8 @@ class AddSimIntWindow(QtWidgets.QDialog):
         self.setWindowTitle("Add Simulation Interval")
         self.setMinimumSize(400, 400)
         self.initUI()
+        self.model = None
+        self.duration_ms = None
 
     def initUI(self):
         self.setLayout(QtWidgets.QVBoxLayout())
@@ -67,5 +69,6 @@ class AddSimIntWindow(QtWidgets.QDialog):
     def createAddBtn(self):
         btn = QtWidgets.QPushButton()
         btn.setText("Add to simulation")
+        btn.clicked.connect(self.accept)
         self.layout().addWidget(btn)
         return btn
