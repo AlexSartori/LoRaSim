@@ -11,10 +11,10 @@ from LoRaSim.gui.AddSimIntWindow import AddSimIntWindow
 class SimIntervalsView(QtWidgets.QFrame):
     def __init__(self):
         super(SimIntervalsView, self).__init__()
-        self.setLayout(QtWidgets.QVBoxLayout())
         self.initUI()
 
     def initUI(self):
+        self.setLayout(QtWidgets.QVBoxLayout())
         self.title = self.createTitle()
         self.table = self.createIntTable()
         self.add_btn = self.createAddBtn()
@@ -26,7 +26,14 @@ class SimIntervalsView(QtWidgets.QFrame):
         return title
 
     def createIntTable(self):
-        tab = QtWidgets.QTableView()
+        tab = QtWidgets.QTableWidget()
+        tab.setColumnCount(3)
+        tab.setHorizontalHeaderLabels(['Start time', 'Duration', 'Model'])
+        tab.horizontalHeader().setStretchLastSection(True)
+
+        # tab.setRowCount(1)
+        # tab.setItem(0, 0, QtWidgets.QTableWidgetItem('a'))
+
         self.layout().addWidget(tab)
         return tab
 

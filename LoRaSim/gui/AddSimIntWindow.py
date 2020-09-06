@@ -1,4 +1,7 @@
+import os
 from PyQt5 import QtWidgets
+from LoRaSim.MarkovChain import MarkovChain
+from LoRaSim.gui.MarkovListItem import MarkovListItem
 
 
 class AddSimIntWindow(QtWidgets.QDialog):
@@ -9,4 +12,56 @@ class AddSimIntWindow(QtWidgets.QDialog):
         self.initUI()
 
     def initUI(self):
-        pass
+        self.setLayout(QtWidgets.QVBoxLayout())
+        self.title = self.createTitle()
+        self.intView = self.createIntView()
+        self.durationDial = self.createDurationSpinner()
+        self.addBtn = self.createAddBtn()
+
+        self.loadMarkovModels()
+
+    def createTitle(self):
+        title = QtWidgets.QLabel()
+        title.setText("Available models:")
+        self.layout().addWidget(title)
+        return title
+
+    def createIntView(self):
+        view = QtWidgets.QListWidget()
+        self.layout().addWidget(view)
+        return view
+
+    def loadMarkovModels(self):
+        gui_dir = os.path.dirname(os.path.realpath(__file__))
+        sim_dir = os.path.dirname(gui_dir)
+        mod_dir = os.path.join(sim_dir, 'Models')
+
+        for f in os.listdir(mod_dir):
+            file = os.path.join(mod_dir, f)
+            model = MarkovChain()
+            model.loadFromFile(file)
+            self.addModelWidget(model)
+
+    def addModelWidget(self, model):
+        assert isinstance(model, MarkovChain)
+        w = MarkovListItem(model)
+        container = QtWidgets.QListWidgetItem()
+        container.setSizeHint(w.sizeHint())
+        self.intView.addItem(container)
+        self.intView.setItemWidget(container, w)
+
+    def createDurationSpinner(self):
+        label = QtWidgets.QLabel()
+        label.setText("Duration:")
+        self.layout().addWidget(label)
+
+        spinner = QtWidgets.QSpinBox()
+        spinner.setRange(0, 10)
+        self.layout().addWidget(spinner)
+        return spinner
+
+    def createAddBtn(self):
+        btn = QtWidgets.QPushButton()
+        btn.setText("Add to simulation")
+        self.layout().addWidget(btn)
+        return btn
