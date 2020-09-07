@@ -38,7 +38,7 @@ class AddSimIntWindow(QtWidgets.QDialog):
         sim_dir = os.path.dirname(gui_dir)
         mod_dir = os.path.join(sim_dir, 'Models')
 
-        for f in os.listdir(mod_dir):
+        for f in sorted(os.listdir(mod_dir)):
             file = os.path.join(mod_dir, f)
             model = MarkovChain()
             model.loadFromFile(file)
