@@ -78,13 +78,13 @@ class SimIntervalsView(QtWidgets.QFrame):
         t = self.table
         t.clearContents()
         t.setRowCount(0)
-        
+
         for i in self.simulator.getIntervals():
             row = t.rowCount()
             t.insertRow(row)
-            t.setItem(row, 0, QtWidgets.QTableWidgetItem(str(i[0])))
-            t.setItem(row, 1, QtWidgets.QTableWidgetItem(str(i[1])))
-            t.setItem(row, 2, QtWidgets.QTableWidgetItem(i[2].title))
+            t.setItem(row, 0, QtWidgets.QTableWidgetItem(str(i.start_time)))
+            t.setItem(row, 1, QtWidgets.QTableWidgetItem(str(i.duration)))
+            t.setItem(row, 2, QtWidgets.QTableWidgetItem(i.model.title))
 
 
     def addIntervalToSim(self, model, duration_ms):

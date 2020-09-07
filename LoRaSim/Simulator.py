@@ -9,16 +9,25 @@ from LoRaSim.SimIntervals import SimIntervals
 
 class Simulator:
     def __init__(self):
+        self.time_ms = 0
         self.intervals = SimIntervals()
 
     def addInterval(self, model, duration):
-        self.intervals.addInterval(model, duration)
+        next_start = sum(i.duration for i in self.intervals.getIntervals())
+        self.intervals.addInterval(next_start, duration, model)
 
     def getIntervals(self):
         return self.intervals.getIntervals()
 
     def run(self):
-        time_ms = 0
+        for idx, i in enumerate(self.getIntervals()):
+            print("[*] Interval: {} - Time: {}ms - Model: {}".format(
+                idx+1,
+                self.time_ms,
+                i.model.title
+            ))
+            self.simulateInterval(i)
 
-        for i in self.getIntervals():
-            print("Simulating " + i[2].title + " for " + str(i[1]) + "ms")
+    def simulateInterval(self, interval):
+        self.time_ms += interval.duration
+        pass

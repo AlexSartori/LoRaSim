@@ -7,24 +7,28 @@
 from LoRaSim.MarkovChain import MarkovChain
 
 
-class SimIntervals:
-    class Interval:
-        def __init__(self, model, duration):
-            assert isinstance(model, MarkovChain)
-            assert isinstance(duration, int)
-            self.model = model
-            self.duration = duration
+class Interval:
+    def __init__(self, start_time, duration, model):
+        assert isinstance(start_time, int)
+        assert isinstance(duration, int)
+        assert isinstance(model, MarkovChain)
+        self.model = model
+        self.duration = duration
+        self.start_time = start_time
 
+
+class SimIntervals:
     def __init__(self):
         self.intervals = []
 
-    def addInterval(self, model, duration):
-        i = self.Interval(model, duration)
+    def addInterval(self, start_time, duration, model):
+        i = Interval(start_time, duration, model)
         self.intervals.append(i)
 
     def getIntervals(self):
-        time = 0
-
-        for i in self.intervals:
-            yield (time, i.duration, i.model)
-            time += i.duration
+        return self.intervals
+        # time = 0
+        #
+        # for i in self.intervals:
+        #     yield (time, i.duration, i.model)
+        #     time += i.duration
