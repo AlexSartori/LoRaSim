@@ -8,7 +8,7 @@ class HomeWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(QtWidgets.QMainWindow, self).__init__()
         self.simulator = Simulator()
-        
+
         self.setWindowTitle("LoRaSim - Home")
         self.setMinimumSize(400, 600)
         self.initUI()
@@ -22,7 +22,7 @@ class HomeWindow(QtWidgets.QMainWindow):
             QtGui.QIcon.fromTheme('media-playback-start'),
             'Start', self
         )
-        # startAction.triggered.connect(...)
+        startAction.triggered.connect(self.simulator.run)
 
         toolbar = self.addToolBar('HomeToolbar')
         toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)

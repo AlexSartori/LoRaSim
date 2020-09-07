@@ -8,6 +8,7 @@ def testInit():
     assert chain.p01 == 0
     assert chain.p10 == 0
     assert chain.p11 == 0
+    assert chain.tx_time == 0
     assert chain.title == ''
     assert chain.description == ''
 
@@ -18,6 +19,7 @@ def testAttributes():
     chain.p01 = 0.2
     chain.p10 = 0.37
     chain.p11 = 0.63
+    chain.tx_time = 760
     chain.title = 'test_title'
     chain.description = 'test_desc'
 
@@ -25,6 +27,7 @@ def testAttributes():
     assert chain.p01 == 0.2
     assert chain.p10 == 0.37
     assert chain.p11 == 0.63
+    assert chain.tx_time == 760
     assert chain.title == 'test_title'
     assert chain.description == 'test_desc'
 
@@ -36,6 +39,7 @@ def testLoadFromFile():
     with open(fname, 'w') as f:
         f.write('title=DR2\n')
         f.write('description=Datarate #2: SF=10 and BW=125kHz\n')
+        f.write('tx_time=760\n')
         f.write('p00=0.80\n')
         f.write('p01=0.20\n')
         f.write('p10=0.37\n')

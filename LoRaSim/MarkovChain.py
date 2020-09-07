@@ -11,6 +11,7 @@ class MarkovChain:
     def __init__(self):
         self.title = ''
         self.description = ''
+        self.tx_time = 0
         self.p00 = 0
         self.p01 = 0
         self.p10 = 0
@@ -19,6 +20,8 @@ class MarkovChain:
     def loadFromFile(self, fname):
         for line in open(fname):
             self._parseKeyValueString(line.strip())
+        if self.tx_time <= 0:
+            raise ValueError("TX time can't be 0")
 
     def _parseKeyValueString(self, line):
         args = line.split('=', 1)
@@ -44,5 +47,7 @@ class MarkovChain:
             self.title = v
         elif k == 'description':
             self.description = v
+        elif k == 'tx_time':
+            self.tx_time = int(v)
         else:
             raise SyntaxError("Unknown key " + k + " for value " + v)

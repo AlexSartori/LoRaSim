@@ -16,3 +16,9 @@ class Simulator:
 
     def getIntervals(self):
         return self.intervals.getIntervals()
+
+    def run(self):
+        time_ms = 0
+
+        for i in self.getIntervals():
+            print("Simulating " + i[2].title + " for " + str(i[1]) + "ms")
