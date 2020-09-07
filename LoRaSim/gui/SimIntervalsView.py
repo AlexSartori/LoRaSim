@@ -4,7 +4,7 @@
     Created by Alessandro Sartori, September 2020.
 '''
 
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 from LoRaSim.gui.AddSimIntWindow import AddSimIntWindow
 
 
@@ -31,9 +31,6 @@ class SimIntervalsView(QtWidgets.QFrame):
         tab.setHorizontalHeaderLabels(['Start time (ms)', 'Duration (ms)', 'Model'])
         tab.horizontalHeader().setStretchLastSection(True)
         tab.resizeColumnsToContents()
-        # tab.setRowCount(1)
-        # tab.setItem(0, 0, QtWidgets.QTableWidgetItem('a'))
-
         self.layout().addWidget(tab)
         return tab
 
@@ -49,21 +46,36 @@ class SimIntervalsView(QtWidgets.QFrame):
 
         if dialog.exec_() == QtWidgets.QDialog.Accepted:
             selected = dialog.intView.selectedItems()
-            if len(selected) < 1: return
+            if len(selected) < 1:
+                self.showErrorMessage('No model was selected')
+                return
+
             modelItem = dialog.intView.itemWidget(selected[0])
-            model = modelItem.model
+            duration_ms = dialog.durationSpinner.time().msecsSinceStartOfDay()
+            if duration_ms <= 0:
+                self.showErrorMessage('Please enter a valid time duration for the model')
+                return
 
             self.addIntervalToSim(
-                model,
-                dialog.durationSpinner.time().msecsSinceStartOfDay()
+                modelItem.model,
+                duration_ms
             )
         else:
             print('Cancelled')
         dialog.deleteLater()
 
+    def showErrorMessage(self, msg):
+        dialog = QtWidgets.QMessageBox()
+        dialog.setWindowTitle("Error")
+        dialog.setIcon(QtWidgets.QMessageBox.Critical)
+        dialog.setText("Error:")
+        dialog.setInformativeText(msg)
+        dialog.exec_()
+
     def addIntervalToSim(self, model, duration_ms):
-        row = self.table.rowCount()
-        self.table.insertRow(row)
-        self.table.setItem(row, 0, QtWidgets.QTableWidgetItem('-'))
-        self.table.setItem(row, 1, QtWidgets.QTableWidgetItem(str(duration_ms)))
-        self.table.setItem(row, 2, QtWidgets.QTableWidgetItem(model.title))
+        t = self.table
+        row = t.rowCount()
+        t.insertRow(row)
+        t.setItem(row, 0, QtWidgets.QTableWidgetItem('-'))
+        t.setItem(row, 1, QtWidgets.QTableWidgetItem(str(duration_ms)))
+        t.setItem(row, 2, QtWidgets.QTableWidgetItem(model.title))
