@@ -1,10 +1,14 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
+
+from LoRaSim.Simulator import Simulator
 from LoRaSim.gui.SimIntervalsView import SimIntervalsView
 
 
 class HomeWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(QtWidgets.QMainWindow, self).__init__()
+        self.simulator = Simulator()
+        
         self.setWindowTitle("LoRaSim - Home")
         self.setMinimumSize(400, 600)
         self.initUI()
@@ -26,6 +30,6 @@ class HomeWindow(QtWidgets.QMainWindow):
         return toolbar
 
     def createSimIntView(self):
-        s = SimIntervalsView()
+        s = SimIntervalsView(self.simulator)
         self.setCentralWidget(s)
         return s

@@ -9,8 +9,9 @@ from LoRaSim.gui.AddSimIntWindow import AddSimIntWindow
 
 
 class SimIntervalsView(QtWidgets.QFrame):
-    def __init__(self):
+    def __init__(self, simulator):
         super(SimIntervalsView, self).__init__()
+        self.simulator = simulator
         self.initUI()
 
     def initUI(self):
@@ -18,6 +19,7 @@ class SimIntervalsView(QtWidgets.QFrame):
         self.title = self.createTitle()
         self.table = self.createIntTable()
         self.add_btn = self.createAddBtn()
+        self.refreshIntTable()
 
     def createTitle(self):
         title = QtWidgets.QLabel()
@@ -72,10 +74,19 @@ class SimIntervalsView(QtWidgets.QFrame):
         dialog.setInformativeText(msg)
         dialog.exec_()
 
-    def addIntervalToSim(self, model, duration_ms):
+    def refreshIntTable(self):
         t = self.table
-        row = t.rowCount()
-        t.insertRow(row)
-        t.setItem(row, 0, QtWidgets.QTableWidgetItem('-'))
-        t.setItem(row, 1, QtWidgets.QTableWidgetItem(str(duration_ms)))
-        t.setItem(row, 2, QtWidgets.QTableWidgetItem(model.title))
+        t.clearContents()
+        t.setRowCount(0)
+        
+        for i in self.simulator.getIntervals():
+            row = t.rowCount()
+            t.insertRow(row)
+            t.setItem(row, 0, QtWidgets.QTableWidgetItem(str(i[0])))
+            t.setItem(row, 1, QtWidgets.QTableWidgetItem(str(i[1])))
+            t.setItem(row, 2, QtWidgets.QTableWidgetItem(i[2].title))
+
+
+    def addIntervalToSim(self, model, duration_ms):
+        self.simulator.addInterval(model, duration_ms)
+        self.refreshIntTable()
