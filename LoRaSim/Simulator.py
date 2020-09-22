@@ -5,8 +5,8 @@
 '''
 
 import random
-import matplotlib.pyplot as plt
 from LoRaSim.SimIntervals import SimIntervals
+from LoRaSim.gui.Plotter import Plotter
 
 
 class Simulator:
@@ -31,7 +31,7 @@ class Simulator:
                 i.model.title
             ))
             res = self.simulateInterval(i)
-            data.append(res)
+            data.append((i, res))
 
         self.plot(data)
 
@@ -57,23 +57,5 @@ class Simulator:
         return res
 
     def plot(self, data):
-        p_succ_y = []
-        p_succ_x = []
-        succ, tot = 0, 0
-
-        for interval in data:
-            for i in interval:
-                if i[1]:
-                    succ += 1
-                tot += 1
-                p_succ_y.append(succ/tot)
-
-            colors = ['lime' if i[1] else 'r' for i in interval]
-            x = [i[0] for i in interval]
-            plt.scatter(x, [0]*len(x), c=colors)
-            p_succ_x.extend(x)
-
-        plt.plot(p_succ_x, p_succ_y)
-        plt.xlabel("Time(ms)")
-        plt.ylabel("Success probability")
-        plt.show()
+        p = Plotter(data)
+        p.show_plot()
