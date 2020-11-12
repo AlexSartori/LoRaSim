@@ -2,11 +2,12 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 
 from LoRaSim.Simulator import Simulator
 from LoRaSim.gui.SimIntervalsView import SimIntervalsView
+from LoRaSim.gui.PlotOptPanel import PlotOptPanel
 
 
-class HomeWindow(QtWidgets.QMainWindow):
+class HomeWindow(QtWidgets.QWidget):
     def __init__(self):
-        super(QtWidgets.QMainWindow, self).__init__()
+        super(QtWidgets.QWidget, self).__init__()
         self.simulator = Simulator()
 
         self.setWindowTitle("LoRaSim - Home")
@@ -14,22 +15,25 @@ class HomeWindow(QtWidgets.QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.toolbar = self.createToolbar()
+        self.setLayout(QtWidgets.QVBoxLayout())
         self.simIntView = self.createSimIntView()
-
-    def createToolbar(self):
-        startAction = QtWidgets.QAction(
-            QtGui.QIcon.fromTheme('media-playback-start'),
-            'Start', self
-        )
-        startAction.triggered.connect(self.simulator.run)
-
-        toolbar = self.addToolBar('HomeToolbar')
-        toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        toolbar.addAction(startAction)
-        return toolbar
+        self.p = self.createPlotOptPanel()
+        self.start_btn = self.createStartBtn()
 
     def createSimIntView(self):
         s = SimIntervalsView(self.simulator)
-        self.setCentralWidget(s)
+        self.layout().addWidget(s)
         return s
+
+    def createPlotOptPanel(self):
+        p = PlotOptPanel()
+        self.layout().addWidget(p)
+        return p
+
+    def createStartBtn(self):
+        b = QtWidgets.QPushButton()
+        b.setText("Start Simulation")
+        b.setIcon(QtGui.QIcon.fromTheme('media-playback-start'))
+        b.clicked.connect(self.simulator.run)
+        self.layout().addWidget(b)
+        return b
