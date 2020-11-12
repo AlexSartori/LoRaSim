@@ -22,6 +22,7 @@ class Simulator:
         return self.intervals.getIntervals()
 
     def run(self):
+        self.time_ms = 0
         data = []
 
         for idx, i in enumerate(self.getIntervals()):
