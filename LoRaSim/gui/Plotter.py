@@ -11,7 +11,11 @@ class Plotter:
         assert isinstance(intervals[0][1], list)
         self.intervals = intervals
 
-    def show_plot(self):
+    def show_plots(self):
+        plt.show()
+
+    def plot_rcv_prob(self):
+        plt.figure()
         x_vals = []
         p_succ_y = []
         ci_min, ci_max = [], []
@@ -42,6 +46,8 @@ class Plotter:
 
         plt.fill_between(x_vals, ci_min, ci_max, color='orange', alpha=0.4, label='95% CI')
         plt.plot(x_vals, p_succ_y, label='Success probability')
+
+        plt.title("Reception Probability")
         plt.xlabel("Time (ms)")
         plt.ylabel("Success probability")
         plt.legend()
@@ -52,3 +58,44 @@ class Plotter:
     def _plot_recv_rate(self, data):
         colors = ['lime' if i[1] else 'r' for i in data]
         plt.scatter(list(i[0] for i in data), [0]*len(data), c=colors, marker='|')
+
+    def plot_throughput(self):
+        plt.figure()
+        x_vals = []
+        y_vals = []
+
+        for interval in self.intervals:
+            metadata = interval[0]
+            data = interval[1]
+            model = metadata.model
+
+            if len(self.intervals) > 1:
+                plt.vlines(metadata.start_time, 0, 1, linestyle=':', color='gray', linewidth=2)
+                plt.text(metadata.start_time, 1.1, model.title, fontsize=12, color='gray')
+
+            for sample in data:
+                if sample[1]:
+                    y_vals.append(16/model.tx_time*1000) # !!! TODO !!! use actual packet size
+                else:
+                    y_vals.append(0)
+
+            x_vals.extend(i[0] for i in data)
+            self._plot_recv_rate(data)
+
+        means = []
+        for i, y in enumerate(y_vals):
+            if i == 0:
+                means.append(y)
+            else:
+                new_m = (means[-1]*i + y)/(i+1)
+                means.append(new_m)
+
+        plt.scatter(x_vals, y_vals, marker='+', alpha=0.4, label="Istantaneous throughput", c='blue')
+        plt.plot(x_vals, means, label="Average Throughput", c='red')
+
+        plt.title("Throughput")
+        plt.xlabel("Time (ms)")
+        plt.ylabel("Throughput (byte/s)")
+        plt.legend()
+        plt.tight_layout()
+        plt.show()

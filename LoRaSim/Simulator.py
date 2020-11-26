@@ -59,4 +59,6 @@ class Simulator:
 
     def plot(self, data):
         p = Plotter(data)
-        p.show_plot()
+        p.plot_rcv_prob()
+        p.plot_throughput()
+        p.show_plots()
