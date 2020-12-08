@@ -69,6 +69,8 @@ class Plotter:
         plt.figure()
         x_vals = []
         y_vals = []
+        ci_min = []
+        ci_max = []
         intervals_plot_info = []
 
         for interval in self.intervals:
@@ -89,15 +91,24 @@ class Plotter:
             self._plot_recv_rate(data)
 
         means = []
+        square_diffs_from_mean = []
         for i, y in enumerate(y_vals):
             if i == 0:
                 means.append(y)
+                square_diffs_from_mean.append(0)
             else:
                 new_m = (means[-1]*i + y)/(i+1)
                 means.append(new_m)
+                square_diffs_from_mean.append((y-new_m)**2)
+
+            std = math.sqrt(sum(square_diffs_from_mean)/(i+1))
+            ci = 1.96*std/math.sqrt(i+1)
+            ci_min.append(means[-1] - ci)
+            ci_max.append(means[-1] + ci)
 
         self._plot_interval_lines(intervals_plot_info, max(y_vals))
-        plt.scatter(x_vals, y_vals, marker='+', alpha=0.4, label="Istantaneous throughput", c='blue')
+        plt.fill_between(x_vals, ci_min, ci_max, color='orange', alpha=0.4, label='95% CI')
+        plt.scatter(x_vals, y_vals, marker='+', alpha=0.4, label="Instantaneous throughput", c='blue')
         plt.plot(x_vals, means, label="Average Throughput", c='red')
 
         plt.title("Throughput")
