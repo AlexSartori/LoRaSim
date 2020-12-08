@@ -19,17 +19,9 @@ class Plotter:
         x_vals = []
         p_succ_y = []
         ci_min, ci_max = [], []
-        intervals_plot_info = []
         succ, tot = 0, 0
 
-        for interval in self.intervals:
-            metadata = interval[0]
-            data = interval[1]
-            model = metadata.model
-
-            if len(self.intervals) > 1:
-                intervals_plot_info.append((metadata.start_time, model.title))
-
+        for metadata, data in self.intervals:
             for sample in data:
                 if sample[1]:
                     succ += 1
@@ -44,7 +36,7 @@ class Plotter:
             x_vals.extend(i[0] for i in data)
             self._plot_recv_rate(data)
 
-        self._plot_interval_lines(intervals_plot_info, max(max(ci_max), max(p_succ_y)))
+        self._plot_interval_lines(max(max(ci_max), max(p_succ_y)))
         plt.fill_between(x_vals, ci_min, ci_max, color='orange', alpha=0.4, label='95% CI')
         plt.plot(x_vals, p_succ_y, label='Success probability')
 
@@ -60,26 +52,19 @@ class Plotter:
         colors = ['lime' if i[1] else 'r' for i in data]
         plt.scatter(list(i[0] for i in data), [0]*len(data), c=colors, marker='|')
 
-    def _plot_interval_lines(self, intervals, height):
-        for time, title in intervals:
-            plt.vlines(time, 0, height, linestyle=':', color='gray', linewidth=2)
-            plt.text(time, height, title, fontsize=12, color='gray')
+    def _plot_interval_lines(self, height):
+        for metadata, data in self.intervals:
+            plt.vlines(metadata.start_time, 0, height, linestyle=':', color='gray', linewidth=2)
+            plt.text(metadata.start_time, height, metadata.model.title, fontsize=12, color='gray')
 
     def plot_throughput(self):
         plt.figure()
         x_vals = []
         y_vals = []
-        ci_min = []
-        ci_max = []
-        intervals_plot_info = []
+        ci_min, ci_max = [], []
 
-        for interval in self.intervals:
-            metadata = interval[0]
-            data = interval[1]
+        for metadata, data in self.intervals:
             model = metadata.model
-
-            if len(self.intervals) > 1:
-                intervals_plot_info.append((metadata.start_time, model.title))
 
             for sample in data:
                 if sample[1]:
@@ -106,7 +91,7 @@ class Plotter:
             ci_min.append(means[-1] - ci)
             ci_max.append(means[-1] + ci)
 
-        self._plot_interval_lines(intervals_plot_info, max(y_vals))
+        self._plot_interval_lines(max(y_vals))
         plt.fill_between(x_vals, ci_min, ci_max, color='orange', alpha=0.4, label='95% CI')
         plt.scatter(x_vals, y_vals, marker='+', alpha=0.4, label="Instantaneous throughput", c='blue')
         plt.plot(x_vals, means, label="Average Throughput", c='red')

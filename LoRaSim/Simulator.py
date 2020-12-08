@@ -6,7 +6,6 @@
 
 import random
 from LoRaSim.SimIntervals import SimIntervals
-from LoRaSim.gui.Plotter import Plotter
 
 
 class Simulator:
