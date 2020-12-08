@@ -8,6 +8,7 @@ from PyQt5 import QtWidgets, QtGui
 from LoRaSim.Simulator import Simulator
 from LoRaSim.gui.SimIntervalsView import SimIntervalsView
 from LoRaSim.gui.PlotOptPanel import PlotOptPanel
+from LoRaSim.gui.Plotter import Plotter
 
 
 class HomeWindow(QtWidgets.QWidget):
@@ -22,7 +23,7 @@ class HomeWindow(QtWidgets.QWidget):
     def initUI(self):
         self.setLayout(QtWidgets.QVBoxLayout())
         self.simIntView = self.createSimIntView()
-        self.p = self.createPlotOptPanel()
+        self.plotOptPanel = self.createPlotOptPanel()
         self.start_btn = self.createStartBtn()
 
     def createSimIntView(self):
@@ -39,6 +40,18 @@ class HomeWindow(QtWidgets.QWidget):
         b = QtWidgets.QPushButton()
         b.setText("Start Simulation")
         b.setIcon(QtGui.QIcon.fromTheme('media-playback-start'))
-        b.clicked.connect(self.simulator.run)
+        b.clicked.connect(self.runSimulation)
         self.layout().addWidget(b)
         return b
+
+    def runSimulation(self):
+        data = self.simulator.run()
+
+        p = Plotter(data)
+        
+        if self.plotOptPanel.getRcvProbOption():
+            p.plot_rcv_prob()
+        if self.plotOptPanel.getThroughputOption():
+            p.plot_throughput()
+
+        p.show_plots()

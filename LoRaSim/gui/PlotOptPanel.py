@@ -19,8 +19,16 @@ class PlotOptPanel(QtWidgets.QGroupBox):
         rcv_prob.setText("Probability of successful delivery vs. Time")
         rcv_prob.setChecked(True)
         self.layout().addWidget(rcv_prob)
+        self.plot_rcv_prob = rcv_prob
 
         throughput = QtWidgets.QCheckBox()
         throughput.setText("Throughput vs. Time")
         throughput.setChecked(False)
         self.layout().addWidget(throughput)
+        self.plot_throughput = throughput
+
+    def getRcvProbOption(self):
+        return self.plot_rcv_prob.isChecked()
+
+    def getThroughputOption(self):
+        return self.plot_throughput.isChecked()

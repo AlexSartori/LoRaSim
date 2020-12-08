@@ -34,7 +34,7 @@ class Simulator:
             res = self.simulateInterval(i)
             data.append((i, res))
 
-        self.plot(data)
+        return data
 
     def simulateInterval(self, interval):
         model = interval.model
@@ -56,9 +56,3 @@ class Simulator:
                     state = 0
 
         return res
-
-    def plot(self, data):
-        p = Plotter(data)
-        p.plot_rcv_prob()
-        p.plot_throughput()
-        p.show_plots()
